@@ -167,7 +167,7 @@ int main( void )
 			switch(command.state)
 			{
 				case MODE_OFF:
-					if (switches & SW_IGN_ON) next_state = MODE_N;
+					if (1) next_state = MODE_N;
 					else next_state = MODE_OFF;
 					P5OUT &= ~(LED_GEAR_ALL);
 					break;
@@ -175,7 +175,7 @@ int main( void )
 #ifndef USE_EGEAR
 					if ((switches & SW_MODE_R) && ((EVENT_SLOW_ACTIVE) || (EVENT_REVERSE_ACTIVE))) next_state = MODE_R;
 					else if ((switches & SW_MODE_B) && ((EVENT_SLOW_ACTIVE) || (EVENT_FORWARD_ACTIVE))) next_state = MODE_BL;
-					else if ((switches & SW_MODE_D) && ((EVENT_SLOW_ACTIVE) || (EVENT_FORWARD_ACTIVE))) next_state = MODE_DL;
+					else if ((1) && ((EVENT_SLOW_ACTIVE) || (EVENT_FORWARD_ACTIVE))) next_state = MODE_DL; // GUY set to run mode 
 #else
 					if ((switches & SW_MODE_R) && ((EVENT_SLOW_ACTIVE) || (EVENT_REVERSE_ACTIVE))) next_state = MODE_CO_R;
 					else if ( (switches & SW_MODE_B) && ( (EVENT_SLOW_ACTIVE) || (!(EVENT_OVER_VEL_LTOH_ACTIVE) && (EVENT_FORWARD_ACTIVE)) ) ) next_state = MODE_CO_BL;
@@ -291,12 +291,9 @@ int main( void )
 			if ((switches & SW_BRAKE) || (EVENT_REGEN_ACTIVE)) P1OUT |= BRAKE_OUT;
 			else P1OUT &= ~BRAKE_OUT;
 			
-			// Control reversing lights
-			if (command.state == MODE_R) P1OUT |= REVERSE_OUT;
-			else P1OUT &= ~REVERSE_OUT;
-			
+		
 			// Control CAN bus power
-			if ((switches & SW_IGN_ACC) || (switches & SW_IGN_ON) || (switches & SW_FUEL))
+			if (1) // start can bus camunication wite no conditions
 			{
 				P1OUT |= CAN_PWR_OUT;
 			}
@@ -753,11 +750,11 @@ void timerA_init( void )
 void timerB_init( void )
 {
 	TBCTL = TBSSEL_2 | ID_3 | TBCLR;			// MCLK/8, clear TBR
-	TBCCR0 = GAUGE_PWM_PERIOD;					// Set timer to count to this value
-	TBCCR3 = 0;									// Gauge 3
-	TBCCTL3 = OUTMOD_7;
-	TBCCR4 = 0;									// Gauge 4
-	TBCCTL4 = OUTMOD_7;
+	TBCCR0 = MOTOR_PWM_PERIOD;					// Set timer to count to this value  //GUY
+	TBCCR3 = 4000;									// MOTOR left 3
+	TBCCTL3 = OUTMOD_3;       //GUY
+	TBCCR4 = 4000;									// MOTOR right 4
+	TBCCTL4 = OUTMOD_3;       //GUY
 	P4SEL |= GAUGE_3_OUT | GAUGE_4_OUT;			// PWM -> output pins for fuel and temp gauges (tacho and power are software freq outputs)
 	TBCCTL0 = CCIE;								// Enable CCR0 interrupt
 	TBCTL |= MC_1;								// Set timer to 'up' count mode
@@ -822,6 +819,7 @@ interrupt(TIMERB0_VECTOR) timer_b0(void)
 	}
 
 	// Update pulse output timebase counter
+	/*
 	gauge_count++;
 	
 	// Update outputs if necessary
@@ -843,6 +841,7 @@ interrupt(TIMERB0_VECTOR) timer_b0(void)
 		EVENT_GAUGE4_CLR;
 		TBCCR4 = gauge.g4_duty;		
 	}	
+	*/
 }
 
 /*
