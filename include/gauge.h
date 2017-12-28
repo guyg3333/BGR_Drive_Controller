@@ -51,8 +51,10 @@ extern gauge_variables gauge;
 // Timer B ISR triggers at GAUGE_FREQUENCY
 // Tach and Speed outputs are software driven counters to produce freqency pulses
 // Fuel and Temp outputs are PWM hardware outputs
-#define GAUGE_FREQ			10000						
+#define GAUGE_FREQ			10000	
+#define MOTOR_FREQ			50				//Hz // GUY	
 #define GAUGE_PWM_PERIOD	(INPUT_CLOCK / 8 / GAUGE_FREQ)
+#define MOTOR_PWM_PERIOD	(INPUT_CLOCK / 8 / MOTOR_FREQ)          // GUY
 
 // Tachometer gauge scaling
 // BMW e36 gauge cluster: 350Hz = 7000rpm = full scale
