@@ -161,6 +161,8 @@ void process_pedal( unsigned int analog_a, unsigned int analog_b, unsigned int a
 			case MODE_DH:
 			case MODE_BL:
 			case MODE_BH:
+				
+				pedal = 40 ; // for testing
 				command.current = pedal;
 				command.rpm = rpm;
 				
