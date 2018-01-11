@@ -80,7 +80,7 @@ void process_pedal( unsigned int analog_a, unsigned int analog_b, unsigned int a
 		pedal = pedal * CURRENT_MAX / PEDAL_TRAVEL;
 		// Check limits and clip upper travel region
 		if (pedal > CURRENT_MAX) pedal = CURRENT_MAX;
-
+		
 #ifndef REGEN_SETS_RPM
 		// Scale regen input to a 0.0 to REGEN_MAX range
 		// Clip lower travel region of regen input
@@ -161,8 +161,14 @@ void process_pedal( unsigned int analog_a, unsigned int analog_b, unsigned int a
 			case MODE_DH:
 			case MODE_BL:
 			case MODE_BH:
+				
+				pedal = 40 ; // for testing
 				command.current = pedal;
 				command.rpm = rpm;
+				
+				TBCCR3 = 4000 - pedal*4 ; //GUY
+				TBCCR4 = 4000 - pedal*4 ; //GUY
+
 				break;
 			case MODE_CHARGE:
 			case MODE_N:
